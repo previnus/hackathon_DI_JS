@@ -127,7 +127,6 @@ const getMetalPromise = () => {
 let gold, silver, platinum, palladium, timestamp
 
 const getMetal = getMetalPromise().then(data => {
-  // Do something with the data
   //console.log(data);
   for(i = 0; i < data.length; i++){
     //console.log(data[i])
@@ -137,32 +136,38 @@ const getMetal = getMetalPromise().then(data => {
             let tablegold = document.querySelector('#gold')
             let existinggoldTd = tablegold.querySelector('td:last-child')
             let goldtd = document.createElement('td')
-            goldtd.textContent = data[i][metal]
+            goldtd.textContent = `$${data[i][metal]}`
             tablegold.insertBefore(goldtd, existinggoldTd.nextSibling);
             
         }else if(metal === 'silver'){
             let tablesilver = document.querySelector('#silver')
             let existingsilverTd = tablesilver.querySelector('td:last-child')
             let silvertd = document.createElement('td')
-            silvertd.textContent = data[i][metal]
+            silvertd.textContent = `$${data[i][metal]}`
             tablesilver.insertBefore(silvertd, existingsilverTd.nextSibling);
 
         }else if(metal === 'platinum'){
             let tableplatinum = document.querySelector('#platinum')
             let existingplatinumTd = tableplatinum.querySelector('td:last-child')
             let platinumtd = document.createElement('td')
-            platinumtd.textContent = data[i][metal]
+            platinumtd.textContent = `$${data[i][metal]}`
             tableplatinum.insertBefore(platinumtd, existingplatinumTd.nextSibling);
 
         }else if(metal === 'palladium'){
             let tablepalladium = document.querySelector('#palladium')
             let existingpalladiumTd = tablepalladium.querySelector('td:last-child')
             let palladiumtd = document.createElement('td')
-            palladiumtd.textContent = data[i][metal]
+            palladiumtd.textContent = `$${data[i][metal]}`
             tablepalladium.insertBefore(palladiumtd, existingpalladiumTd.nextSibling);
 
         }else{
-            timestamp = data[i][metal]
+            let tabletimestamp = document.querySelector('#timestamp')
+            let timestamptd = document.createElement('td')
+            timestamptd.colSpan = 2;
+            let date = new Date(data[i][metal])
+            date = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            timestamptd.textContent = `Last Update on: ${date}`
+            tabletimestamp.appendChild(timestamptd)
         }
     }
   }
@@ -173,20 +178,21 @@ const getMetal = getMetalPromise().then(data => {
   console.error(error);
 });
 
-//console.log(gold, silver, platinum, palladium, timestamp)
 
+/* Currency Converter */
 
-//calculate time difference
-
-const timeCompare  = (timestamp) => {
-  const date = new Date(timestamp)
-  const now = new Date()
-  const diff = now.getTime() - date.getTime()
-  const threeHoursInMs = 10800000 // check if time difference is more than 3hrs
-
-  if (diff > threeHoursInMs) {
-    return true
+const convertCurrency = () => {
+    const amount = document.getElementById('amount').value;
+    const currency = document.getElementById('currency').value;
+  
+    fetch(`https://api.exchangerate-api.com/v4/latest/MUR`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        const exchangeRate = data.rates[currency];
+        const convertedAmount = (amount * exchangeRate).toFixed(2);
+        const result = `Rs.${amount} = ${convertedAmount} ${currency}`;
+        document.getElementById('result-currency').textContent = result;
+      })
+      .catch(error => console.error(error));
   }
-
-  return false
-}
