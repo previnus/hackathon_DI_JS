@@ -1,0 +1,14 @@
+.tab-bar {
+    padding: 20px 50px 60px 50px;
+    height: 60px;
+    box-shadow: 1px 0px 10px 0px rgba(0,0,0,0.20);
+    background-color: white;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.btnplusheight {
+    height: 6.5rem;
+}

@@ -28,16 +28,42 @@ const getApi = () => {
     const url = 'https://api.metals.live/v1/spot';
     const corsUrl = 'https://corsproxy.io'; // have to make use of a proxy because of cors issues
   
-    fetch(corsUrl + '/?' + url)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data[0]["gold"])
-  
-        for(let i = 0; i < data.length; i++){
-          for(const key in data[i]){
-            console.log(`${key} ${data[i][key]}`)
-          }
-        }
-      })
-      .catch(error => console.error(error));
+    fetch( url)
+    // fetch(corsUrl + '/?' + url)
+      .then(response => {
+        console.log(response)
+        return response.json()
+      
+      }).then(data => {
+        localStorage.setItem('metalData', JSON.stringify(data))
+      
+      }).catch(error => console.error(error));
   }
+
+  getApi()
+
+    // set local storage
+
+      /* let value = 20
+      localStorage.setItem("calcMemory", value);
+      const cat = localStorage.getItem("calcMemory")
+      console.log(cat)
+      localStorage.removeItem("myCat") 
+      localStorage.clear()
+
+    */
+
+//calculate time difference
+
+const timeCompare  = (timestamp) => {
+  const date = new Date(timestamp)
+  const now = new Date()
+  const diff = now.getTime() - date.getTime()
+  const threeHoursInMs = 10800000 // check if time difference is more than 3hrs
+
+  if (diff > threeHoursInMs) {
+    return true
+  }
+
+  return false
+}
